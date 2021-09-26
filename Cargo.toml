@@ -3,7 +3,7 @@ name = "etm-rs"
 version = "0.1.0"
 edition = "2018"
 authors = ["SHI Wenxuan <whexy@outlook.com>"]
-description = "Embedded Trace Library for ARMv8 Coresight ETMv4 sysfs"
+description = "Embedded Trace for Linux Program with Coresight ETMv4"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
