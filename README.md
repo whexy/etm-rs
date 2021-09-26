@@ -9,9 +9,9 @@ This project is under development and not yet released.
 ETM
 - [x] Get ETM sysFS interface
 - [ ] Get and Set address space
-- [ ] Get and Set ETM mode
+- [x] Get and Set ETM mode
 - [ ] Get and Set Context ID & PID
-- [ ] Enable ETM
+- [x] Enable ETM
 
 ETR
 - [ ] Enable ETR

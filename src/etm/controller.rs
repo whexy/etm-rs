@@ -1,6 +1,5 @@
+use super::{find::*, mode::*, reg::*};
 use std::error::Error;
-
-use super::{find::*, reg::*};
 
 #[derive(Debug)]
 pub struct Device {
@@ -21,9 +20,27 @@ impl Device {
         println!("{:?}", self);
 
         match get_device_info(self) {
-            Ok(reg) => println!("{:?}", reg),
+            Ok(etm) => println!("{:?}", etm),
             Err(err) => {
-                eprintln!("[ERROR] Cannot get device info {:?}, {}", self, err)
+                error!("[ERROR] Cannot get device info {:?}, {}", self, err)
+            }
+        }
+    }
+
+    pub fn get_mode(&self) {
+        match get_device_mode(self) {
+            Ok(mode) => println!("{:?}", mode),
+            Err(err) => {
+                error!("[ERROR] Cannot get device mode {:?}, {}", self, err)
+            }
+        }
+    }
+
+    pub fn set_mode(&self, mode: &EtmMode) {
+        match set_device_mode(self, mode) {
+            Ok(_) => info!("Successfully set mode {:?}", mode),
+            Err(err) => {
+                error!("Cannot set device mode {:?}, {:?}, {}", mode, self, err)
             }
         }
     }

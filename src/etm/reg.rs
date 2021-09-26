@@ -4,7 +4,7 @@ use std::{
     io::{Read, Write},
 };
 
-use super::controller::Device;
+use super::{controller::Device, mode::*};
 
 #[derive(Debug)]
 pub struct ETM {
@@ -42,4 +42,21 @@ pub fn enable_device(d: &Device) -> Result<(), Box<dyn Error>> {
 /// disable ETM device
 pub fn disable_device(d: &Device) -> Result<(), Box<dyn Error>> {
     d.set("enable_source", "0")
+}
+
+/// get ETM mode
+pub fn get_device_mode(d: &Device) -> Result<EtmMode, Box<dyn Error>> {
+    let mode_num =
+        u32::from_str_radix(d.get("mode")?.trim_start_matches("0x"), 16)?;
+    Ok(EtmMode::from(mode_num))
+}
+
+/// set ETM mode
+pub fn set_device_mode(
+    d: &Device,
+    mode: &EtmMode,
+) -> Result<(), Box<dyn Error>> {
+    let mode_num: u32 = mode.into();
+    d.set("mode", format!("{:#010x}", mode_num).as_str())?;
+    Ok(())
 }
