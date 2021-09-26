@@ -1,2 +1,5 @@
-pub mod device;
-pub mod reg;
+pub mod controller;
+pub mod find;
+mod reg;
+
+pub use controller::*;
