@@ -1,6 +1,8 @@
 use std::error::Error;
 
-use super::{etmerror::ETMError, Device};
+use crate::device::Device;
+
+use super::etm::ETMError;
 
 type AddrPair = (u64, u64);
 
@@ -8,12 +10,6 @@ type AddrPair = (u64, u64);
 fn get_nr_addr_cmp(d: &Device) -> Result<u8, Box<dyn Error>> {
     let nr_addr_cmp = d.get_from_hex("nr_addr_cmp")?;
     Ok(nr_addr_cmp)
-}
-
-/// get ETM addr_idx
-fn get_addr_idx(d: &Device) -> Result<u8, Box<dyn Error>> {
-    let addr_idx = d.get_from_hex("addr_idx")?;
-    Ok(addr_idx)
 }
 
 /// set ETM addr_idx
@@ -105,7 +101,7 @@ pub fn set_all_addr_range(
     }
     // set index => set range
     for (idx, addr_pair) in range_space.iter().enumerate() {
-        set_addr_range(d, idx as u8, *addr_pair)?;
+        set_addr_range(d, (idx * 2) as u8, *addr_pair)?;
     }
     Ok(())
 }

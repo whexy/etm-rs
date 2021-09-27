@@ -3,7 +3,7 @@ use std::error::Error;
 use tock_registers::register_bitfields;
 use tock_registers::LocalRegisterCopy;
 
-use super::Device;
+use crate::device::Device;
 
 register_bitfields! [
     u32,

@@ -1,21 +1,18 @@
-use std::{
-    error::Error,
-    fmt::LowerHex,
-    fs::File,
-    io::{Read, Write},
-};
+use std::{error::Error, fmt::LowerHex, fs::File, io::Read, io::Write};
 
 use num_traits::Num;
 
-use super::{controller::Device, etmerror::ETMError, mode::*};
-
-#[derive(Debug)]
-pub struct ETM {
-    cpu: u8,
-    mode: EtmMode,
+#[derive(Debug, Clone)]
+pub struct Device {
+    pub name: String,
+    pub sysfs: String,
 }
 
 impl Device {
+    pub fn new(name: String, sysfs: String) -> Self {
+        Device { name, sysfs }
+    }
+
     pub fn get(&self, reg: &str) -> Result<String, Box<dyn Error>> {
         let path = format!("{}/{}", self.sysfs, reg);
         let mut file = File::open(path.as_str())?;
@@ -43,7 +40,7 @@ impl Device {
         let str = self.get(reg)?;
         match T::from_str_radix(str.trim_start_matches("0x"), 16) {
             Ok(result) => Ok(result),
-            Err(_) => Err(Box::new(ETMError::InvalidHex(str.to_string()))),
+            Err(_) => Err(Box::new(DeviceError::InvalidHex(str.to_string()))),
         }
     }
 
@@ -59,31 +56,34 @@ impl Device {
     }
 }
 
-/// get detail info of an ETM device
-pub fn get_device_info(d: &Device) -> Result<ETM, Box<dyn Error>> {
-    let cpu: u8 = get_device_cpu(d)?;
-    let mode: EtmMode = get_device_mode(d)?;
-    Ok(ETM { cpu, mode })
+pub enum DeviceError {
+    InvalidHex(String),
 }
 
-/// enable ETM device
-pub fn enable_device(d: &Device) -> Result<(), Box<dyn Error>> {
-    d.set("enable_source", "1")
+impl std::fmt::Display for DeviceError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            DeviceError::InvalidHex(hex) => {
+                write!(f, "Invalid hex string {}", hex)
+            }
+        }
+    }
 }
 
-/// disable ETM device
-pub fn disable_device(d: &Device) -> Result<(), Box<dyn Error>> {
-    d.set("enable_source", "0")
+impl std::fmt::Debug for DeviceError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            DeviceError::InvalidHex(hex) => {
+                write!(f, "Invalid hex string {}", hex)
+            }
+        }
+    }
 }
 
-/// get ETM CPU
-pub fn get_device_cpu(d: &Device) -> Result<u8, Box<dyn Error>> {
-    let cpu: u8 = d.get("cpu")?.parse()?;
-    Ok(cpu)
-}
-
-/// reset ETM
-pub fn reset_device(d: &Device) -> Result<(), Box<dyn Error>> {
-    d.set("reset", "1")?;
-    Ok(())
+impl std::error::Error for DeviceError {
+    fn description(&self) -> &str {
+        match self {
+            DeviceError::InvalidHex(_) => "Invalid hex string",
+        }
+    }
 }
