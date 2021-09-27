@@ -16,6 +16,10 @@ impl Device {
         disable_device(self)
     }
 
+    pub fn reset(&self) -> Result<(), Box<dyn Error>> {
+        reset_device(self)
+    }
+
     pub fn get_info(&self) {
         println!("{:?}", self);
 

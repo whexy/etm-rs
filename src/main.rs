@@ -10,26 +10,28 @@ fn main() {
             // get device info
             device.get_info();
 
-            // get device mode
+            // reset device
+            device.reset().unwrap();
+
+            // get device info
+            device.get_info();
+
+            // set device mode
             device.set_mode(&etm::EtmMode::default());
 
-            // set address space
+            // set address range
             device.set_addr_range(&vec![(0x4000_0000u64, 0x4000_2000u64)]);
+
+            // get all address range
             device.get_addr_range();
 
             // enable and disable
-            // match device.enable() {
-            //     Ok(_) => info!("Success enable device."),
-            //     Err(err) => {
-            //         error!("Cannot enable device {:?}, {}.", device, err)
-            //     }
-            // }
-            // match device.disable() {
-            //     Ok(_) => info!("Success disable device."),
-            //     Err(err) => {
-            //         error!("Cannot disable device {:?}, {}.", device, err)
-            //     }
-            // }
+            // device.enable().unwrap();
+            // device.disable().unwrap();
+
+            // reset device
+            device.reset().unwrap();
+
             println!()
         }
     } else {

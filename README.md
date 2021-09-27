@@ -12,7 +12,7 @@ ETM
 - [x] Get and Set ETM mode
 - [ ] Get and Set Context ID & PID
 - [x] Enable ETM
-- [ ] Reset ETM
+- [x] Reset ETM
 
 ETR
 - [ ] Enable ETR

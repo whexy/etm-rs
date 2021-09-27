@@ -81,3 +81,9 @@ pub fn get_device_cpu(d: &Device) -> Result<u8, Box<dyn Error>> {
     let cpu: u8 = d.get("cpu")?.parse()?;
     Ok(cpu)
 }
+
+/// reset ETM
+pub fn reset_device(d: &Device) -> Result<(), Box<dyn Error>> {
+    d.set("reset", "1")?;
+    Ok(())
+}
