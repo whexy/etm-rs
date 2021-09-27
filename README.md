@@ -8,10 +8,11 @@ This project is under development and not yet released.
 
 ETM
 - [x] Get ETM sysFS interface
-- [ ] Get and Set address space
+- [x] Get and Set address space
 - [x] Get and Set ETM mode
 - [ ] Get and Set Context ID & PID
 - [x] Enable ETM
+- [ ] Reset ETM
 
 ETR
 - [ ] Enable ETR
@@ -20,3 +21,6 @@ ETR
 
 ptm2human
 - [ ] Integration
+
+misc
+- [ ] remove print and error handling in `controller.rs`

@@ -1,5 +1,9 @@
+use std::error::Error;
+
 use tock_registers::register_bitfields;
 use tock_registers::LocalRegisterCopy;
+
+use super::Device;
 
 register_bitfields! [
     u32,
@@ -143,6 +147,22 @@ impl EtmMode {
     pub fn default() -> Self {
         EtmMode::from(0x4c000850u32)
     }
+}
+
+/// get ETM mode
+pub fn get_device_mode(d: &Device) -> Result<EtmMode, Box<dyn Error>> {
+    let mode_num: u32 = d.get_from_hex("mode")?;
+    Ok(EtmMode::from(mode_num))
+}
+
+/// set ETM mode
+pub fn set_device_mode(
+    d: &Device,
+    mode: &EtmMode,
+) -> Result<(), Box<dyn Error>> {
+    let mode_num: u32 = mode.into();
+    d.set("mode", format!("{:#010x}", mode_num).as_str())?;
+    Ok(())
 }
 
 #[cfg(test)]

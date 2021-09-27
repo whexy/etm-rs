@@ -1,4 +1,4 @@
-use super::{find::*, mode::*, reg::*};
+use super::{addr::*, find::*, mode::*, reg::*};
 use std::error::Error;
 
 #[derive(Debug)]
@@ -41,6 +41,29 @@ impl Device {
             Ok(_) => info!("Successfully set mode {:?}", mode),
             Err(err) => {
                 error!("Cannot set device mode {:?}, {:?}, {}", mode, self, err)
+            }
+        }
+    }
+
+    pub fn get_addr_range(&self) {
+        match get_all_addr_range(self) {
+            Ok(f) => f.into_iter().for_each(|(s, e)| {
+                println!("{:#2X}-{:#2X}", s, e);
+            }),
+            Err(err) => {
+                error!("Cannot get address range {:?}, {}", self, err)
+            }
+        }
+    }
+
+    pub fn set_addr_range(&self, range: &Vec<(u64, u64)>) {
+        match set_all_addr_range(self, range) {
+            Ok(_) => info!("Successfully set range {:?}", range),
+            Err(err) => {
+                error!(
+                    "Cannot set address range {:?}, {:?}, {}",
+                    range, self, err
+                )
             }
         }
     }

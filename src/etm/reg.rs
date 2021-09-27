@@ -1,10 +1,13 @@
 use std::{
     error::Error,
+    fmt::LowerHex,
     fs::File,
     io::{Read, Write},
 };
 
-use super::{controller::Device, mode::*};
+use num_traits::Num;
+
+use super::{controller::Device, etmerror::ETMError, mode::*};
 
 #[derive(Debug)]
 pub struct ETM {
@@ -13,19 +16,46 @@ pub struct ETM {
 }
 
 impl Device {
-    fn get(&self, reg: &str) -> Result<String, Box<dyn Error>> {
+    pub fn get(&self, reg: &str) -> Result<String, Box<dyn Error>> {
         let path = format!("{}/{}", self.sysfs, reg);
-        let mut file = File::open(path)?;
+        let mut file = File::open(path.as_str())?;
         let mut buffer = String::new();
         file.read_to_string(&mut buffer)?;
-        Ok(buffer.trim().to_string())
+        buffer = buffer.trim().to_string();
+        info!("read {}: {}", path, buffer);
+        Ok(buffer)
     }
 
-    fn set(&self, reg: &str, content: &str) -> Result<(), Box<dyn Error>> {
+    pub fn set(&self, reg: &str, content: &str) -> Result<(), Box<dyn Error>> {
         let path = format!("{}/{}", self.sysfs, reg);
-        let mut file = File::create(path)?;
+        let mut file = File::create(path.as_str())?;
         write!(file, "{}", content)?;
+        info!("write {}: {}", path, content);
         Ok(())
+    }
+}
+
+impl Device {
+    pub fn get_from_hex<T>(&self, reg: &str) -> Result<T, Box<dyn Error>>
+    where
+        T: Num,
+    {
+        let str = self.get(reg)?;
+        match T::from_str_radix(str.trim_start_matches("0x"), 16) {
+            Ok(result) => Ok(result),
+            Err(_) => Err(Box::new(ETMError::InvalidHex(str.to_string()))),
+        }
+    }
+
+    pub fn set_from_hex<T>(
+        &self,
+        reg: &str,
+        content: T,
+    ) -> Result<(), Box<dyn Error>>
+    where
+        T: LowerHex,
+    {
+        self.set(reg, format!("{:#010x}", content).as_str())
     }
 }
 
@@ -50,21 +80,4 @@ pub fn disable_device(d: &Device) -> Result<(), Box<dyn Error>> {
 pub fn get_device_cpu(d: &Device) -> Result<u8, Box<dyn Error>> {
     let cpu: u8 = d.get("cpu")?.parse()?;
     Ok(cpu)
-}
-
-/// get ETM mode
-pub fn get_device_mode(d: &Device) -> Result<EtmMode, Box<dyn Error>> {
-    let mode_num =
-        u32::from_str_radix(d.get("mode")?.trim_start_matches("0x"), 16)?;
-    Ok(EtmMode::from(mode_num))
-}
-
-/// set ETM mode
-pub fn set_device_mode(
-    d: &Device,
-    mode: &EtmMode,
-) -> Result<(), Box<dyn Error>> {
-    let mode_num: u32 = mode.into();
-    d.set("mode", format!("{:#010x}", mode_num).as_str())?;
-    Ok(())
 }

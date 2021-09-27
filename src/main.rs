@@ -13,19 +13,24 @@ fn main() {
             // get device mode
             device.set_mode(&etm::EtmMode::default());
 
+            // set address space
+            device.set_addr_range(&vec![(0x4000_0000u64, 0x4000_2000u64)]);
+            device.get_addr_range();
+
             // enable and disable
-            match device.enable() {
-                Ok(_) => info!("Success enable device."),
-                Err(err) => {
-                    error!("Cannot enable device {:?}, {}.", device, err)
-                }
-            }
-            match device.disable() {
-                Ok(_) => info!("Success disable device."),
-                Err(err) => {
-                    error!("Cannot disable device {:?}, {}.", device, err)
-                }
-            }
+            // match device.enable() {
+            //     Ok(_) => info!("Success enable device."),
+            //     Err(err) => {
+            //         error!("Cannot enable device {:?}, {}.", device, err)
+            //     }
+            // }
+            // match device.disable() {
+            //     Ok(_) => info!("Success disable device."),
+            //     Err(err) => {
+            //         error!("Cannot disable device {:?}, {}.", device, err)
+            //     }
+            // }
+            println!()
         }
     } else {
         error!("Cannot find device.")
