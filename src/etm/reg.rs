@@ -9,6 +9,7 @@ use super::{controller::Device, mode::*};
 #[derive(Debug)]
 pub struct ETM {
     cpu: u8,
+    mode: EtmMode,
 }
 
 impl Device {
@@ -30,8 +31,9 @@ impl Device {
 
 /// get detail info of an ETM device
 pub fn get_device_info(d: &Device) -> Result<ETM, Box<dyn Error>> {
-    let cpu: u8 = d.get("cpu")?.parse()?;
-    Ok(ETM { cpu })
+    let cpu: u8 = get_device_cpu(d)?;
+    let mode: EtmMode = get_device_mode(d)?;
+    Ok(ETM { cpu, mode })
 }
 
 /// enable ETM device
@@ -42,6 +44,12 @@ pub fn enable_device(d: &Device) -> Result<(), Box<dyn Error>> {
 /// disable ETM device
 pub fn disable_device(d: &Device) -> Result<(), Box<dyn Error>> {
     d.set("enable_source", "0")
+}
+
+/// get ETM CPU
+pub fn get_device_cpu(d: &Device) -> Result<u8, Box<dyn Error>> {
+    let cpu: u8 = d.get("cpu")?.parse()?;
+    Ok(cpu)
 }
 
 /// get ETM mode
