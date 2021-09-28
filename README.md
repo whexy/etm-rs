@@ -1,10 +1,14 @@
 # etm-rs
 
-Embedded Trace for Linux Program with Coresight ETMv4
+<center>
+<img src="https://img.shields.io/badge/language-rust-orange?style=flat&logo=rust"/>
+<img src="https://img.shields.io/github/license/whexy/etm-rs?color=brightgreen"/>
 
-This project is under development and not yet released.
+Embedded Trace for Linux Program with Coresight ETMv4.
+</center>
 
-# Example
+
+## Example
 
 ```rust
 // Set ETR, buffer size = 256MB
@@ -37,7 +41,41 @@ etr0.disable().unwrap();
 etm0.reset().unwrap();
 ```
 
-# Features
+## etm-cli
+
+A command line tool to trace program with Coresight ETMv4 based on `etm-rs`.
+
+### One-line example
+
+```shell
+RUST_LOG=warn taskset 0x1 ./etm-rs -o <output_file> -- /bin/ls -la /
+```
+
+This command means:
+
+- Set the environment variable `RUST_LOG`. Support levels: debug, info, warn, error.
+- Tie the program in CPU 0 with `taskset 0x1`.
+- Use `etm-rs` to trace program `/bin/ls -la /`.
+- Write tracing stream to <output_file>.
+
+### Usage
+
+```
+USAGE:
+    etm-rs [OPTIONS] <trace>...
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+OPTIONS:
+    -o, --output <output>    Set the output file of ETM trace stream
+
+ARGS:
+    <trace>...    The prgram and its arguments to trace
+```
+
+## Features
 
 ETM
 - [x] Get ETM sysFS interface

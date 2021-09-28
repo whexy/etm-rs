@@ -1,10 +1,9 @@
 [package]
 name = "etm-rs"
-version = "0.1.0"
+version = "1.0.0"
 edition = "2018"
 authors = ["SHI Wenxuan <whexy@outlook.com>"]
 description = "Embedded Trace for Linux Program with Coresight ETMv4"
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 num-traits = "0.2"
@@ -12,3 +11,4 @@ tock-registers = "0.7.0"
 log = "0.4.14"
 pretty_env_logger = "0.4.0"
 nix = "0.22.1"
+clap = {version = "~2.27.0", features = ["yaml"]}

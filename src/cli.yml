@@ -1,0 +1,16 @@
+name: etm-rs
+version: "1.0"
+author: SHI Wenxuan <whexy@outlook.com>
+about: Embedded Trace for Linux Program with Coresight ETMv4
+settings:
+  - TrailingVarArg
+args:
+  - output:
+      short: o
+      long: output
+      help: Set the output file of ETM trace stream
+      takes_value: true
+  - trace:
+      help: The prgram and its arguments to trace
+      required: true
+      multiple: true
