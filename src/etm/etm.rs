@@ -1,4 +1,4 @@
-use super::{addr::*, find::*, mode::*};
+use super::{addr::*, ctx::*, find::*, mode::*};
 use crate::device::Device;
 use std::error::Error;
 use std::mem;
@@ -56,6 +56,17 @@ impl ETM {
     ) -> Result<(), Box<dyn Error>> {
         set_all_addr_range(&self.device, range)
     }
+
+    pub fn get_pid_group(&self) -> Result<Vec<u32>, Box<dyn Error>> {
+        get_pid_group(&self.device)
+    }
+
+    pub fn set_pid_group(
+        &self,
+        group: &Vec<u32>,
+    ) -> Result<(), Box<dyn Error>> {
+        set_pid_group(&self.device, group)
+    }
 }
 
 pub fn get_etms() -> Result<Vec<ETM>, Box<dyn Error>> {
@@ -65,6 +76,7 @@ pub fn get_etms() -> Result<Vec<ETM>, Box<dyn Error>> {
 pub enum ETMError {
     InvalidAddrIdx(u8),
     InvalidAddrRange(String),
+    InvalidCtxIdx(u8),
     AddrRangeLimitExceed,
 }
 
@@ -76,6 +88,9 @@ impl std::fmt::Display for ETMError {
             }
             ETMError::InvalidAddrRange(addr) => {
                 write!(f, "Invalid Address Range {}", addr)
+            }
+            ETMError::InvalidCtxIdx(idx) => {
+                write!(f, "Invalid Context ID {}", idx)
             }
             ETMError::AddrRangeLimitExceed => {
                 write!(f, "Address Range Limit Exceed")
@@ -93,6 +108,9 @@ impl std::fmt::Debug for ETMError {
             ETMError::InvalidAddrRange(addr) => {
                 write!(f, "Invalid Address Range {}", addr)
             }
+            ETMError::InvalidCtxIdx(idx) => {
+                write!(f, "Invalid Context ID {}", idx)
+            }
             ETMError::AddrRangeLimitExceed => {
                 write!(f, "Address Range Limit Exceed")
             }
@@ -105,6 +123,7 @@ impl std::error::Error for ETMError {
         match self {
             ETMError::InvalidAddrIdx(_) => "Invalid Address Index",
             ETMError::InvalidAddrRange(_) => "Invalid Address Range",
+            ETMError::InvalidCtxIdx(_) => "Invalid Context ID",
             ETMError::AddrRangeLimitExceed => "Address Range Limit Exceed",
         }
     }

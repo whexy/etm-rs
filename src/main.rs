@@ -14,9 +14,11 @@ fn main() {
     let etm0 = &mut (etm::get_etms().unwrap())[0];
     etm0.reset().unwrap();
     etm0.set_mode(etm::EtmMode::default()).unwrap();
+    // set pid group
+    etm0.set_pid_group(&vec![114514]).unwrap();
     // set address range
     etm0.set_addr_range(&vec![
-        (0x400000u64, 0x400200u64),
+        (0x400000, 0x400200),
         (0x400400, 0x400500),
     ])
     .unwrap();
