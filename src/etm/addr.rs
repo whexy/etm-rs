@@ -2,7 +2,7 @@ use std::error::Error;
 
 use crate::device::Device;
 
-use super::etm::ETMError;
+use super::service::ETMError;
 
 type AddrPair = (u64, u64);
 
@@ -39,14 +39,14 @@ fn get_addr_range(d: &Device, idx: u8) -> Result<AddrPair, Box<dyn Error>> {
     let mut addr_split = addr_range.split(' ');
     let start_addr_str = addr_split
         .next()
-        .ok_or(ETMError::InvalidAddrRange(addr_range.to_string()))?;
+        .ok_or_else(|| ETMError::InvalidAddrRange(addr_range.to_string()))?;
 
     let start_addr =
         u64::from_str_radix(start_addr_str.trim_start_matches("0x"), 16)?;
 
     let end_addr_str = addr_split
         .next()
-        .ok_or(ETMError::InvalidAddrRange(addr_range.to_string()))?;
+        .ok_or_else(|| ETMError::InvalidAddrRange(addr_range.to_string()))?;
 
     let end_addr =
         u64::from_str_radix(end_addr_str.trim_start_matches("0x"), 16)?;
@@ -92,7 +92,7 @@ pub fn get_all_addr_range(d: &Device) -> Result<Vec<AddrPair>, Box<dyn Error>> {
 /// set ETM address range
 pub fn set_all_addr_range(
     d: &Device,
-    range_space: &Vec<AddrPair>,
+    range_space: &[AddrPair],
 ) -> Result<(), Box<dyn Error>> {
     let nr_addr_cmp = get_nr_addr_cmp(d)?;
     // check length of range_space is less than nr_addr_cmp

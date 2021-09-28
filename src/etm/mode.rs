@@ -79,7 +79,7 @@ impl From<LocalRegisterCopy<u32, ETM_MODE::Register>> for EtmMode {
         let excl_kern = mode.read(ETM_MODE::EXCL_KERN);
         let excl_user = mode.read(ETM_MODE::EXCL_USER);
 
-        let etm_mode = EtmMode {
+        EtmMode {
             exclude,
             bb,
             cycacc,
@@ -98,15 +98,13 @@ impl From<LocalRegisterCopy<u32, ETM_MODE::Register>> for EtmMode {
             viewinst_startstop,
             excl_kern,
             excl_user,
-        };
-        etm_mode
+        }
     }
 }
 
-impl Into<LocalRegisterCopy<u32, ETM_MODE::Register>> for &EtmMode {
-    fn into(self) -> LocalRegisterCopy<u32, ETM_MODE::Register> {
+impl From<&EtmMode> for LocalRegisterCopy<u32, ETM_MODE::Register> {
+    fn from(mode: &EtmMode) -> Self {
         let mut reg = LocalRegisterCopy::<u32, ETM_MODE::Register>::new(0);
-        let mode = self;
         reg.modify(ETM_MODE::EXCLUDE.val(mode.exclude));
         reg.modify(ETM_MODE::BB.val(mode.bb));
         reg.modify(ETM_MODE::CYCACC.val(mode.cycacc));
@@ -136,9 +134,9 @@ impl From<u32> for EtmMode {
     }
 }
 
-impl Into<u32> for &EtmMode {
-    fn into(self) -> u32 {
-        let reg: LocalRegisterCopy<u32, ETM_MODE::Register> = self.into();
+impl From<&EtmMode> for u32 {
+    fn from(mode: &EtmMode) -> Self {
+        let reg: LocalRegisterCopy<u32, ETM_MODE::Register> = mode.into();
         reg.get()
     }
 }

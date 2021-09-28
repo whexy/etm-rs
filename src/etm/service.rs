@@ -6,7 +6,6 @@ use std::mem;
 #[derive(Debug)]
 pub struct ETM {
     device: Device,
-    cpu: u8,
     mode: EtmMode,
     bb_ctrl: bool,
 }
@@ -14,13 +13,11 @@ pub struct ETM {
 /// Get ETM info from Device
 impl ETM {
     pub fn from_device(device: Device) -> Result<Self, Box<dyn Error>> {
-        let cpu: u8 = device.get("cpu")?.parse()?;
         let mode: EtmMode = get_device_mode(&device)?;
         let bb_ctrl_raw: u8 = device.get_from_hex("bb_ctrl")?;
         let bb_ctrl = bb_ctrl_raw == 1;
         Ok(ETM {
             device,
-            cpu,
             mode,
             bb_ctrl,
         })
@@ -60,7 +57,7 @@ impl ETM {
 
     pub fn set_addr_range(
         &self,
-        range: &Vec<(u64, u64)>,
+        range: &[(u64, u64)],
     ) -> Result<(), Box<dyn Error>> {
         set_all_addr_range(&self.device, range)
     }
@@ -69,10 +66,7 @@ impl ETM {
         get_pid_group(&self.device)
     }
 
-    pub fn set_pid_group(
-        &self,
-        group: &Vec<u32>,
-    ) -> Result<(), Box<dyn Error>> {
+    pub fn set_pid_group(&self, group: &[u32]) -> Result<(), Box<dyn Error>> {
         set_pid_group(&self.device, group)
     }
 
