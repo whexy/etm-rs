@@ -8,6 +8,7 @@ pub struct ETM {
     device: Device,
     cpu: u8,
     mode: EtmMode,
+    bb_ctrl: bool,
 }
 
 /// Get ETM info from Device
@@ -15,7 +16,14 @@ impl ETM {
     pub fn from_device(device: Device) -> Result<Self, Box<dyn Error>> {
         let cpu: u8 = device.get("cpu")?.parse()?;
         let mode: EtmMode = get_device_mode(&device)?;
-        Ok(ETM { device, cpu, mode })
+        let bb_ctrl_raw: u8 = device.get_from_hex("bb_ctrl")?;
+        let bb_ctrl = bb_ctrl_raw == 1;
+        Ok(ETM {
+            device,
+            cpu,
+            mode,
+            bb_ctrl,
+        })
     }
 }
 
@@ -66,6 +74,20 @@ impl ETM {
         group: &Vec<u32>,
     ) -> Result<(), Box<dyn Error>> {
         set_pid_group(&self.device, group)
+    }
+
+    pub fn enable_bb_ctrl(&mut self) -> Result<(), Box<dyn Error>> {
+        let d = &self.device;
+        d.set("bb_ctrl", "1")?;
+        self.bb_ctrl = true;
+        Ok(())
+    }
+
+    pub fn disable_bb_ctrl(&mut self) -> Result<(), Box<dyn Error>> {
+        let d = &self.device;
+        d.set("bb_ctrl", "0")?;
+        self.bb_ctrl = false;
+        Ok(())
     }
 }
 

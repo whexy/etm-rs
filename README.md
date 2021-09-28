@@ -21,13 +21,15 @@ etm0.set_mode(etm::EtmMode::default()).unwrap();
 // set pid group
 etm0.set_pid_group(&vec![114514]).unwrap();
 // set address range
-etm0.set_addr_range(&vec![
-    (0x400000, 0x400200),
-    (0x400400, 0x400500),
-])
-.unwrap();
+etm0.set_addr_range(&vec![(0x400000, 0x400200), (0x400400, 0x400500)])
+    .unwrap();
+// enable BB_CTRL
+etm0.enable_bb_ctrl().unwrap();
+
+// Print Settings and enable ETM
+println!("{:?}", etm0);
 etm0.enable().unwrap();
-    
+
 // disable ETR and ETM
 etm0.disable().unwrap();
 etr0.disable().unwrap();
@@ -35,21 +37,21 @@ etr0.disable().unwrap();
 etm0.reset().unwrap();
 ```
 
-# TODOs
+# Features
 
 ETM
 - [x] Get ETM sysFS interface
 - [x] Get and Set address space
 - [x] Get and Set ETM mode
 - [x] Get and Set Context ID & PID
-- [ ] Enable and Disable bb branch trace
+- [x] Enable and Disable bb branch trace
 - [x] Enable ETM
 - [x] Reset ETM
 
 ETR
 - [x] Enable ETR
 - [x] Set buffer size
-- [ ] Get trace stream
 
-ptm2human
-- [ ] Integration
+RUNTIME
+- [ ] Get trace stream
+- [ ] ptm2human Integration

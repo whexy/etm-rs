@@ -17,13 +17,15 @@ fn main() {
     // set pid group
     etm0.set_pid_group(&vec![114514]).unwrap();
     // set address range
-    etm0.set_addr_range(&vec![
-        (0x400000, 0x400200),
-        (0x400400, 0x400500),
-    ])
-    .unwrap();
+    etm0.set_addr_range(&vec![(0x400000, 0x400200), (0x400400, 0x400500)])
+        .unwrap();
+    // enable BB_CTRL
+    etm0.enable_bb_ctrl().unwrap();
+
+    // Print Settings and enable ETM
+    println!("{:?}", etm0);
     etm0.enable().unwrap();
-    
+
     // disable ETR and ETM
     etm0.disable().unwrap();
     etr0.disable().unwrap();
