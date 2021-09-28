@@ -1,11 +1,11 @@
 # etm-rs
 
-<center>
+<p align="center">
 <img src="https://img.shields.io/badge/language-rust-orange?style=flat&logo=rust"/>
 <img src="https://img.shields.io/github/license/whexy/etm-rs?color=brightgreen"/>
-
+<br>
 Embedded Trace for Linux Program with Coresight ETMv4.
-</center>
+</p>
 
 
 ## Example
