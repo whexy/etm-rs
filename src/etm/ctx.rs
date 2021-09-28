@@ -9,7 +9,12 @@ fn get_numcidc(d: &Device) -> Result<u8, Box<dyn Error>> {
 
 /// set ctxid_idx
 fn set_ctxid_idx(d: &Device, idx: u8) -> Result<(), Box<dyn Error>> {
-    d.set("ctxid_idx", format!("{:#02x}", idx).as_str())
+    d.set("ctxid_idx", format!("{:#02X}", idx).as_str())
+}
+
+/// set addr_ctxtype
+fn set_addr_ctxtype(d: &Device) -> Result<(), Box<dyn Error>> {
+    d.set("addr_ctxtype", "ctxid")
 }
 
 /// get pid for idx
@@ -29,7 +34,7 @@ fn set_ctxid_pid(d: &Device, idx: u8, pid: u32) -> Result<(), Box<dyn Error>> {
         return Err(Box::new(ETMError::InvalidCtxIdx(idx)));
     }
     set_ctxid_idx(d, idx)?;
-    d.set("ctxid_pid", format!("{:#02x}", pid).as_str())
+    d.set("ctxid_pid", format!("{:#02X}", pid).as_str())
 }
 
 /// set pid group
@@ -41,6 +46,7 @@ pub fn set_pid_group(
     if pid_group.len() > get_numcidc(d)? as usize {
         return Err(Box::new(ETMError::InvalidCtxIdx(pid_group.len() as u8)));
     }
+    set_addr_ctxtype(d)?;
     for (idx, pid) in pid_group.iter().enumerate() {
         set_ctxid_pid(d, idx as u8, *pid)?;
     }

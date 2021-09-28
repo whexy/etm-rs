@@ -19,9 +19,9 @@ let etm0 = &mut (etm::get_etms().unwrap())[0];
 etm0.reset().unwrap();
 etm0.set_mode(etm::EtmMode::default()).unwrap();
 // set pid group
-etm0.set_pid_group(&vec![114514]).unwrap();
+etm0.set_pid_group(&[114514]).unwrap();
 // set address range
-etm0.set_addr_range(&vec![(0x400000, 0x400200), (0x400400, 0x400500)])
+etm0.set_addr_range(&[(0x400000, 0x400200), (0x400400, 0x400500)])
     .unwrap();
 // enable BB_CTRL
 etm0.enable_bb_ctrl().unwrap();
@@ -53,5 +53,5 @@ ETR
 - [x] Set buffer size
 
 RUNTIME
-- [ ] Get trace stream
+- [x] Get trace stream
 - [ ] ptm2human Integration

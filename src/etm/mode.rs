@@ -159,7 +159,7 @@ pub fn set_device_mode(
     mode: &EtmMode,
 ) -> Result<(), Box<dyn Error>> {
     let mode_num: u32 = mode.into();
-    d.set("mode", format!("{:#010x}", mode_num).as_str())?;
+    d.set("mode", format!("{:#010X}", mode_num).as_str())?;
     Ok(())
 }
 

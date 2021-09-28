@@ -35,7 +35,7 @@ impl ETR {
         let device = &self.device;
         device.set(
             "buffer_size",
-            format!("{:#02x}", size as u64 * 1024 * 1024).as_str(),
+            format!("{:#02X}", size as u64 * 1024 * 1024).as_str(),
         )?;
         self.buffer_size = size;
         Ok(())

@@ -70,7 +70,7 @@ fn set_addr_range(
 
     d.set(
         "addr_range",
-        format!("{:#02x} {:#02x}", range.0, range.1).as_str(),
+        format!("{:#02X} {:#02X}", range.0, range.1).as_str(),
     )?;
 
     Ok(())

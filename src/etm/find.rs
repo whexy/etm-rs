@@ -10,7 +10,7 @@ use crate::device::Device;
 pub fn find_availabe_etms() -> Result<Vec<ETM>, Box<dyn Error>> {
     let paths = fs::read_dir("/sys/bus/coresight/devices")?;
 
-    let etm: Vec<ETM> = paths
+    let mut device: Vec<Device> = paths
         .into_iter()
         .map(|p| p.unwrap())
         .filter(|p| p.file_name().to_str().unwrap().contains("etm"))
@@ -20,6 +20,10 @@ pub fn find_availabe_etms() -> Result<Vec<ETM>, Box<dyn Error>> {
                 format!("{}", p.path().display()),
             )
         })
+        .collect();
+    device.sort_by(|a, b| a.name.cmp(&b.name));
+    let etm = device
+        .into_iter()
         .filter_map(|d| match ETM::from_device(d.clone()) {
             Ok(e) => Some(e),
             Err(err) => {

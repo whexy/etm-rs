@@ -1,4 +1,4 @@
-use std::{error::Error, fmt::LowerHex, fs::File, io::Read, io::Write};
+use std::{error::Error, fmt::UpperHex, fs::File, io::Read, io::Write};
 
 use num_traits::Num;
 
@@ -50,9 +50,9 @@ impl Device {
         content: T,
     ) -> Result<(), Box<dyn Error>>
     where
-        T: LowerHex,
+        T: UpperHex,
     {
-        self.set(reg, format!("{:#010x}", content).as_str())
+        self.set(reg, format!("{:#010X}", content).as_str())
     }
 }
 
