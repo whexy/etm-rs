@@ -1,6 +1,7 @@
 use super::{addr::*, find::*, mode::*};
 use crate::device::Device;
 use std::error::Error;
+use std::mem;
 
 #[derive(Debug)]
 pub struct ETM {
@@ -29,19 +30,20 @@ impl ETM {
         d.set("enable_source", "0")
     }
 
-    pub fn reset(&self) -> Result<(), Box<dyn Error>> {
-        let d = &self.device;
-        d.set("reset", "1")
+    pub fn reset(&mut self) -> Result<(), Box<dyn Error>> {
+        {
+            let d = &self.device;
+            d.set("reset", "1")?
+        }
+        let _ = mem::replace(self, Self::from_device(self.device.clone())?);
+        Ok(())
     }
 
-    pub fn get_mode(&self) -> Result<EtmMode, Box<dyn Error>> {
+    pub fn set_mode(&mut self, mode: EtmMode) -> Result<(), Box<dyn Error>> {
         let d = &self.device;
-        get_device_mode(d)
-    }
-
-    pub fn set_mode(&self, mode: &EtmMode) -> Result<(), Box<dyn Error>> {
-        let d = &self.device;
-        set_device_mode(d, mode)
+        set_device_mode(d, &mode)?;
+        self.mode = mode;
+        Ok(())
     }
 
     pub fn get_addr_range(&self) -> Result<Vec<(u64, u64)>, Box<dyn Error>> {
