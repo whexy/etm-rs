@@ -33,7 +33,10 @@ fn set_ctxid_pid(d: &Device, idx: u8, pid: u32) -> Result<(), Box<dyn Error>> {
 }
 
 /// set pid group
-pub fn set_pid_group(d: &Device, pid_group: &Vec<u32>) -> Result<(), Box<dyn Error>> {
+pub fn set_pid_group(
+    d: &Device,
+    pid_group: &Vec<u32>,
+) -> Result<(), Box<dyn Error>> {
     // check the idx is valid
     if pid_group.len() > get_numcidc(d)? as usize {
         return Err(Box::new(ETMError::InvalidCtxIdx(pid_group.len() as u8)));
