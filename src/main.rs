@@ -52,7 +52,6 @@ fn main() {
                 .map(|s| CString::new(*s).unwrap())
                 .collect();
             info!("Trace target set as {:?} {:?}", path, argv);
-            println!("Ready to trace, press <ENTER> to begin...");
             let _ = stdin().read(&mut [0]).unwrap();
             execv(&path, &argv).expect("Execution Failed");
         }
@@ -60,9 +59,10 @@ fn main() {
             /* ETM */
             let pid = child.as_raw() as u32;
             etm0.set_pid_group(&[pid]).unwrap();
-            etm0.set_addr_range(&[(0x0, 0xffffffffffff)]).unwrap();
+            // etm0.set_addr_range(&[(0x0, 0xffffffffffff)]).unwrap();
             warn!("{:?}", etm0);
             etm0.enable().unwrap();
+            println!("Ready to trace, press <ENTER> to begin...");
             // wait until end
             let _ = wait().expect("Wait Failed");
             let _ = Command::new("/bin/dd")
