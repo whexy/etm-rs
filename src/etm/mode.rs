@@ -9,8 +9,8 @@ register_bitfields! [
     u32,
     ETM_MODE [
         EXCLUDE OFFSET(0) NUMBITS(1) [
-            exclude = 0,
-            include = 1
+            include = 0,
+            exclude = 1
         ],
         BB OFFSET(4) NUMBITS(1) [],
         CYCACC OFFSET(5) NUMBITS(1) [],
